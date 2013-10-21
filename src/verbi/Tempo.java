@@ -4,7 +4,6 @@
  */
 package verbi;
 
-import com.sun.xml.internal.fastinfoset.util.StringArray;
 import java.util.ArrayList;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
