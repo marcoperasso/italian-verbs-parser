@@ -26,12 +26,19 @@ class Modo {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         //sb.append(name);
-        for (Tempo t : tempi)
-        {
+        for (Tempo t : tempi) {
             sb.append("\r\n");
             sb.append(t.toString());
         }
         return sb.toString();
+    }
+
+    public int getCount() {
+        int count = 0;
+        for (Tempo t : tempi) {
+            count += t.getCount();
+        }
+        return count;
     }
 
     /**
@@ -53,7 +60,7 @@ class Modo {
     }
 
     void rimuoviPrimaPersona() {
-        assert("IMPERATIVO".equals(name));
+        assert ("IMPERATIVO".equals(name));
         tempi.get(0).rimuoviPrimaPersona();
     }
 }

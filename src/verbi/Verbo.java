@@ -40,7 +40,14 @@ class Verbo {
         }
         return sb.toString();
     }
-
+    private int getCount() {
+        int count = 0;
+        for (Modo modo : modi) {
+            //sb.append("\r\n");
+            count += modo.getCount();
+        }
+        return count;
+    }
     void parse(Document doc) {
         Elements select = doc.select("span.verbo");
         if (select.size() != 1) {
@@ -125,6 +132,9 @@ class Verbo {
         modi.set(2, m1);
         Modo m3 = modi.get(3);
         m3.rimuoviPrimaPersona();//tolgo la prima persona dall'imperativo
+        
+        if (getCount() != 95)
+            throw new RuntimeException("errore: " + name);
     }
 
     private Element findParent(Element el, String nodeName) {
@@ -149,4 +159,6 @@ class Verbo {
     String getName() {
         return name;
     }
+
+   
 }

@@ -24,7 +24,7 @@ class Tempo {
             if (text.isEmpty()) {
                 continue;
             }
-            if((int)text.charAt(0) == 151) {
+            if ((int) text.charAt(0) == 151) {
                 text = "-";
             }
             values.add(text);
@@ -47,6 +47,14 @@ class Tempo {
         return sb.toString();
     }
 
+    public int getCount() {
+        int count = 0;
+        for (String s : values) {
+            count++;
+        }
+        return count;
+    }
+
     /**
      * @return the name
      */
@@ -57,8 +65,6 @@ class Tempo {
     /**
      * @return the value
      */
-    
-
     void rimuoviPrimaPersona() {
         values.remove(0);
     }
