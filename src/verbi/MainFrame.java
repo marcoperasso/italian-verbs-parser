@@ -21,7 +21,7 @@ import org.jsoup.nodes.Document;
  * @author Perasso
  */
 public class MainFrame extends javax.swing.JFrame {
-    
+
     public static final String UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.60 Safari/537.17";
     private boolean working = false;
     private Thread thread;
@@ -31,7 +31,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        
+
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("icon.png")));
     }
 
@@ -123,46 +123,53 @@ public class MainFrame extends javax.swing.JFrame {
     private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
         dispose();
     }//GEN-LAST:event_jButtonExitActionPerformed
-    
+
     private Verbo parseVerb(int id) {
         String url = "http://www.italian-verbs.com/verbi-italiani/coniugazione.php?id=" + id;
-        Document doc;
-        try {
-            
-            
-            doc = Jsoup.connect(url)
-                    .userAgent(UserAgent)
-                    .timeout(600000)
-                    .get();
-            Verbo v = new Verbo();
-            v.parse(doc);
-            
-            showOutput(id + " - " + v.getName());
-            return v;
-            
-        } catch (IOException ex) {
-            showOutput(ex.getMessage());
-        }
-        return null;
+        Verbo v = parseVerb(url);
+        if (v == null)
+            return null;
+        showOutput(id + " - " + v.getName());
+        return v;
     }
     private void jButtonGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGoActionPerformed
-        
+
         working = true;
-        
-        
+
+
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    int id = Integer.parseInt(jTextFieldId.getText());
+                    String text = jTextFieldId.getText();
+                    String filename = "verbi.txt";
+                    int id = 0;
+                    boolean singleVerb = false;
+                    try {
+                        id = Integer.parseInt(text);
+                    } catch (Exception ex) {
+                        filename = text + ".txt";
+                        singleVerb = true;
+                    }
+                    boolean append = !singleVerb && id > 0;
                     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                                                                new FileOutputStream("verbi.txt", id > 0), "UTF-8");
+                            new FileOutputStream(filename, append), "UTF-8");
                     PrintWriter out = new PrintWriter(outputStreamWriter, true);
-                    while (working && id < 12330) {
-                        id++;
-                        out.print(parseVerb(id).toString());
-                        out.print("\r\n");
-                        jTextFieldId.setText(Integer.toString(id));
+                    if (singleVerb) {
+                        String url = "http://www.italian-verbs.com/verbi-italiani/coniugazione.php?verbo=" + text;
+                        final Verbo parseVerb = parseVerb(url);
+                        if (parseVerb != null)
+                            out.print(parseVerb.toString());
+                    } else {
+                        while (working && id < 12330) {
+                            id++;
+                            final Verbo parseVerb = parseVerb(id);
+                            if (parseVerb == null)
+                                continue;
+                            out.print(parseVerb.toString());
+                            out.print("\r\n");
+                            jTextFieldId.setText(Integer.toString(id));
+                        }
                     }
                     out.close();
                 } catch (final Exception ex) {
@@ -182,7 +189,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void showOutput(final String message) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -210,8 +217,8 @@ public class MainFrame extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                    
-                    
+
+
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -255,5 +262,24 @@ public class MainFrame extends javax.swing.JFrame {
         } catch (InterruptedException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private Verbo parseVerb(String url) {
+        Document doc;
+        try {
+
+
+            doc = Jsoup.connect(url)
+                    .userAgent(UserAgent)
+                    .timeout(600000)
+                    .get();
+            Verbo v = new Verbo();
+            v.parse(doc);
+            return v;
+
+        } catch (Exception ex) {
+            showOutput(ex.getMessage());
+        }
+        return null;
     }
 }

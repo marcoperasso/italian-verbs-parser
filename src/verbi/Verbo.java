@@ -20,7 +20,7 @@ class Verbo {
     private String name;
     private String descri;
     private String warning;
-    ArrayList<Modo> modi = new ArrayList<>();
+    ArrayList<Modo> modi = new ArrayList<Modo>();
 
     public Verbo() {
     }
@@ -49,6 +49,8 @@ class Verbo {
         return count;
     }
     void parse(Document doc) {
+        try
+        {
         Elements select = doc.select("span.verbo");
         if (select.size() != 1) {
             return;
@@ -132,9 +134,13 @@ class Verbo {
         modi.set(2, m1);
         Modo m3 = modi.get(3);
         m3.rimuoviPrimaPersona();//tolgo la prima persona dall'imperativo
-        
+        }
+        catch(Exception ex)
+        {
+            throw new RuntimeException("errore per il verbo: " + name + " - " + ex.getMessage());
+        }
         if (getCount() != 95)
-            throw new RuntimeException("errore: " + name);
+            throw new RuntimeException("errore per il verbo: " + name + " - Conteggio sbagliato");
     }
 
     private Element findParent(Element el, String nodeName) {

@@ -56,11 +56,17 @@ class Modo {
     }
 
     void aggiungiTempo(Element titolo, Element valore) {
-        tempi.add(new Tempo(titolo, valore));
+        tempi.add(new Tempo(titolo, valore, getExpectedItems()));
     }
 
     void rimuoviPrimaPersona() {
         assert ("IMPERATIVO".equals(name));
         tempi.get(0).rimuoviPrimaPersona();
+    }
+
+    private int getExpectedItems() {
+        if ("INFINITO".equals(name) || "PARTICIPIO".equals(name) || "GERUNDIO".equals(name))
+            return 1;
+        return 6;
     }
 }

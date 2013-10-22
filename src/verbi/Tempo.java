@@ -17,7 +17,7 @@ class Tempo {
     private final String name;
     private final ArrayList<String> values = new ArrayList<String>();
 
-    Tempo(Element titolo, Element valore) {
+    Tempo(Element titolo, Element valore, int expectedItems) {
         this.name = titolo.text();
         for (TextNode tn : valore.textNodes()) {
             String text = tn.text().replace((char) 160, ' ').replace(';', ' ').trim();
@@ -28,9 +28,10 @@ class Tempo {
                 text = "-";
             }
             values.add(text);
-
-
         }
+        
+        if (expectedItems != values.size())
+            throw new RuntimeException("Errore nel numero delle voci per " + name);
     }
 
     @Override
