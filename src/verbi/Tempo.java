@@ -30,8 +30,10 @@ class Tempo {
             values.add(text);
         }
         
-        if (expectedItems != values.size())
-            throw new RuntimeException("Errore nel numero delle voci per " + name);
+        while (expectedItems > values.size())
+        {
+            values.add("-");
+        }
     }
 
     @Override
@@ -41,7 +43,7 @@ class Tempo {
             if (sb.length() > 0) {
                 sb.append("\r\n");
             }
-            sb.append(s);
+            sb.append(LineAdjuster.adjustLine(s));
         }
 
 
