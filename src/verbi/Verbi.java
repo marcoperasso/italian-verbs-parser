@@ -22,9 +22,10 @@ public class Verbi {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MainFrame main = new MainFrame();
-        main.setLocation(100, 100);
-        main.setVisible(true);
+        /* MainFrame main = new MainFrame();
+         main.setLocation(100, 100);
+         main.setVisible(true);*/
+        adjust();
     }
 
     public static void adjust() {
@@ -34,20 +35,22 @@ public class Verbi {
             FileInputStream fis = new FileInputStream("c:\\metrobikers\\metrobikers\\verbi.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
-            Pattern p1 = Pattern.compile("\\((\\w*)\\)");
-            Pattern p2 = Pattern.compile("(\\w+)(,\\s)(.+)");
+            Pattern p1 = Pattern.compile("([^\\s]+)(,\\s)(.+)");
+            Pattern p2 = Pattern.compile("\\(([^\\s]*)\\)");
             int i = 0;
             String line = null;
             while ((line = reader.readLine()) != null) {
+                boolean modified = false;
                 if ((i++ % 96) != 0) {
-                    line = replace(p2, line);
-
-                    Matcher matcher = p1.matcher(line);
+                    String a = replace(p1, line);
+                    modified = !a.equals(line);
+                    line = a;
+                    Matcher matcher = p2.matcher(line);
                     if (matcher.find()) {
                         line = matcher.replaceAll("") + ", " + matcher.replaceAll("$1");
+                        modified = true;
                     }
                 }
-
                 out.println(line);
 
             }
@@ -55,7 +58,6 @@ public class Verbi {
             fos.close();
             out.close();
         } catch (Exception ex) {
-            
         }
 
     }
