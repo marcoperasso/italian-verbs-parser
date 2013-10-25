@@ -32,12 +32,13 @@ public class Verbi {
         try {
             FileOutputStream fos = new FileOutputStream("c:\\metrobikers\\metrobikers\\verbi1.txt");
             PrintWriter out = new PrintWriter(fos);
+
             FileInputStream fis = new FileInputStream("c:\\metrobikers\\metrobikers\\verbi.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             Pattern p1 = Pattern.compile("([^\\s]+)(,\\s)(.+)");
             Pattern p2 = Pattern.compile("\\(([^\\s]*)\\)");
-            int i = 0;
+            long i = 0;
             String line = null;
             while ((line = reader.readLine()) != null) {
                 boolean modified = false;
@@ -51,13 +52,16 @@ public class Verbi {
                         modified = true;
                     }
                 }
+
                 out.println(line);
+                out.flush();
 
             }
             fis.close();
             fos.close();
             out.close();
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
     }
